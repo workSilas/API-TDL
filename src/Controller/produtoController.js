@@ -3,13 +3,26 @@ import * as bd from '../Repository/produtoRepository.js'
 import { Router } from 'express'
 const endpoints = Router()
 
+endpoints.get('/pizzaria/consulta/:id', async (req, resp) => {
+    try {
+        let id = req.params.id
+        let registros = await bd.consultaIdPizzaria(id)
+        resp.send(registros)
+    }
+    catch (err) {
+        resp.status(400).send({
+            erro: err.message
+        })
+    }
+})
+
 endpoints.get('/pizzaria/consulta/', async (req, resp) => {
     try {
         let registros = await bd.consultaPizzaria()
         resp.send(registros)
     }
     catch (err) {
-        send.status(400).send({
+        resp.status(400).send({
             erro: err.message
         })
     }

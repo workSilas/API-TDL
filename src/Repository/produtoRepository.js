@@ -1,5 +1,21 @@
 import con from "./connection.js";
 
+export async function consultaIdPizzaria(id) {
+    let comando = `
+    select  id_produto as id,
+            nome,
+            valor,
+            descricao,
+            quantidade		
+      from  produto
+      where id_produto = ?;
+    `
+
+    let resposta = await con.query(comando, [id])
+    let registro = resposta[0]
+    return registro[0]
+}
+
 export async function consultaPizzaria() {
     let comando = `
     select  id_produto as id,

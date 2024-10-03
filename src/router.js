@@ -1,6 +1,6 @@
-import produtos from "./Controller/produtoController.js"
+import usuarios from "./Controller/tb_usuarioController.js"
 
 
 export default function criarRotas(servidor) {
-    servidor.use(produtos)
+    servidor.use(usuarios)
 }

@@ -3,31 +3,6 @@ import * as bd from '../Repository/tb_produtosRepository.js'
 import { Router } from 'express'
 const endpoints = Router()
 
-endpoints.get('/tdl/produtos/consulta/:id', async (req, resp) => {
-    try {
-        let id = req.params.id
-        let registros = await bd.consultaIdProduto(id)
-        resp.send(registros)
-    }
-    catch (err) {
-        resp.status(400).send({
-            erro: err.message
-        })
-    }
-})
-
-endpoints.get('/tdl/produtos/consulta/', async (req, resp) => {
-    try {
-        let registros = await bd.consultaProduto()
-        resp.send(registros)
-    }
-    catch (err) {
-        resp.status(400).send({
-            erro: err.message
-        })
-    }
-})
-
 endpoints.post('/tdl/produtos/inserir/', async (req, resp) => {
     try {
         let produto = req.body
@@ -43,11 +18,98 @@ endpoints.post('/tdl/produtos/inserir/', async (req, resp) => {
     }
 })
 
+
+endpoints.get('/tdl/produtos/consulta/', async (req, resp) => {
+    try {
+        let produto = req.body
+        let registros = await bd.consultaCardProduto(produto)
+        resp.send(registros)
+    }
+    catch (err) {
+        resp.status(400).send({
+            erro: err.message
+        })
+    }
+})
+
+endpoints.get('/tdl/produtos/consulta/:id', async (req, resp) => {
+    try {
+        let id = req.params.id
+        let registros = await bd.exibicaoProduto(id)
+        resp.send(registros)
+    }
+    catch (err) {
+        resp.status(400).send({
+            erro: err.message
+        })
+    }
+})
+
+endpoints.get('/tdl/produtos/estoque/', async (req, resp) => {
+    try {
+        let registros = await bd.estoqueProduto()
+        resp.send(registros)
+    }
+    catch (err) {
+        resp.status(400).send({
+            erro: err.message
+        })
+    }
+})
+
+endpoints.get('/tdl/produtos/semEstoque/', async (req, resp) => {
+    try {
+        let produto = req.body
+        let registros = await bd.semEstoque(produto)
+        resp.send(registros)
+    }
+    catch (err) {
+        resp.status(400).send({
+            erro: err.message
+        })
+    }
+})
+
 endpoints.put('/tdl/produtos/alterar/:id', async (req, resp) => {
     try {
         let id = req.params.id
         let produto = req.body
         let linhasAfetadas = await bd.alterarProduto(id, produto)
+        if (linhasAfetadas >= 1) {
+            resp.send()
+        } else {
+            resp.status(404).send({ erro: 'Nenhum registro encontrado.' })
+        }
+    }
+    catch (err) {
+        resp.status(400).send({
+            erro: err.message
+        })
+    }
+})
+
+endpoints.put('/tdl/produtos/alterarEstoque/:id', async (req, resp) => {
+    try {
+        let id = req.params.id
+        let produto = req.body
+        let linhasAfetadas = await bd.alterarEstoque(id, produto)
+        if (linhasAfetadas >= 1) {
+            resp.send()
+        } else {
+            resp.status(404).send({ erro: 'Nenhum registro encontrado.' })
+        }
+    }
+    catch (err) {
+        resp.status(400).send({
+            erro: err.message
+        })
+    }
+})
+
+endpoints.delete('/tdl/produtos/deleteEstoque/', async (req, resp) => {
+    try {
+        let produto = req.body
+        let linhasAfetadas = await bd.deletarSemEstoque(produto)
         if (linhasAfetadas >= 1) {
             resp.send()
         } else {

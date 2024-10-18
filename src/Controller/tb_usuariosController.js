@@ -19,6 +19,8 @@ endpoints.post('/tdl/usuarios/inserir/', async (req, resp) => {
     }
 })
 
+// Usuário
+
 endpoints.get('/tdl/usuarios/consulta/', async (req, resp) => {
     try {
         let usuario = req.body
@@ -31,6 +33,8 @@ endpoints.get('/tdl/usuarios/consulta/', async (req, resp) => {
         })
     }
 })
+
+// Nome Usuário
 
 endpoints.get('/tdl/usuarios/consulta/:id', async (req, resp) => {
     try {

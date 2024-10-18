@@ -11,6 +11,8 @@ export async function inserirUsuario(usuario) {
     return info.insertId
 }
 
+// Usuário
+
 export async function validarUsuario(usuario) {
     let comando = `
     select  id_usuario as id,
@@ -25,6 +27,8 @@ export async function validarUsuario(usuario) {
     return registro[0]
 }
 
+// Nome Usuário
+
 export async function consultaNomeUsuario(id) {
     let comando = `
     select  nome
@@ -35,31 +39,4 @@ export async function consultaNomeUsuario(id) {
     let resposta = await con.query(comando, [id])
     let registro = resposta[0]
     return registro
-}
-
-
-
-export async function alterarUsuario(id, usuario) {
-    let comando = `
-    update 	tb_usuarios
-       set 	nm_usuario 	    = ?,
-            nr_telefone 	= ?,
-            ds_senha 		= ?
-     where 	id 		        = ?;
-    `
-
-    let resposta = await con.query(comando, [usuario.nome, usuario.telefone, usuario.senha, id])
-    let info = resposta[0]
-    return info.affectedRows
-}
-
-export async function deletarUsuario(id) {
-    let comando = `
-    delete 
-      from  tb_usuarios
-     where  id = ?;
-    `
-    let resposta = await con.query(comando, [id])
-    let info = resposta[0]
-    return info.affectedRows
 }

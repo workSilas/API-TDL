@@ -1,12 +1,12 @@
-import * as bd from '../Repository/tb_vendaRepository.js'
+import * as bd from '../Repository/tb_produtosRepository.js'
 
 import { Router } from 'express'
 const endpoints = Router()
 
-endpoints.get('/tdl/vendas/consulta/:id', async (req, resp) => {
+endpoints.get('/tdl/produtos/consulta/:id', async (req, resp) => {
     try {
         let id = req.params.id
-        let registros = await bd.consultaIdVenda(id)
+        let registros = await bd.consultaIdProduto(id)
         resp.send(registros)
     }
     catch (err) {
@@ -16,9 +16,9 @@ endpoints.get('/tdl/vendas/consulta/:id', async (req, resp) => {
     }
 })
 
-endpoints.get('/tdl/vendas/consulta/', async (req, resp) => {
+endpoints.get('/tdl/produtos/consulta/', async (req, resp) => {
     try {
-        let registros = await bd.consultaVenda()
+        let registros = await bd.consultaProduto()
         resp.send(registros)
     }
     catch (err) {
@@ -28,10 +28,10 @@ endpoints.get('/tdl/vendas/consulta/', async (req, resp) => {
     }
 })
 
-endpoints.post('/tdl/vendas/inserir/', async (req, resp) => {
+endpoints.post('/tdl/produtos/inserir/', async (req, resp) => {
     try {
-        let venda = req.body
-        let id = await bd.inserirVenda(venda)
+        let produto = req.body
+        let id = await bd.inserirProduto(produto)
         resp.send({
             novoId: id
         })
@@ -43,11 +43,11 @@ endpoints.post('/tdl/vendas/inserir/', async (req, resp) => {
     }
 })
 
-endpoints.put('/tdl/vendas/alterar/:id', async (req, resp) => {
+endpoints.put('/tdl/produtos/alterar/:id', async (req, resp) => {
     try {
         let id = req.params.id
-        let venda = req.body
-        let linhasAfetadas = await bd.alterarVenda(id, venda)
+        let produto = req.body
+        let linhasAfetadas = await bd.alterarProduto(id, produto)
         if (linhasAfetadas >= 1) {
             resp.send()
         } else {
@@ -61,10 +61,10 @@ endpoints.put('/tdl/vendas/alterar/:id', async (req, resp) => {
     }
 })
 
-endpoints.delete('/tdl/vendas/delete/:id', async (req, resp) => {
+endpoints.delete('/tdl/produtos/delete/:id', async (req, resp) => {
     try {
         let id = req.params.id
-        let linhasAfetadas = await bd.deletarVenda(id)
+        let linhasAfetadas = await bd.deletarProduto(id)
         if (linhasAfetadas >= 1) {
             resp.send()
         } else {

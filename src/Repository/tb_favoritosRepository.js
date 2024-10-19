@@ -2,7 +2,7 @@ import con from "./connection.js";
 
 export async function inserirFavorito(favorito) {
     let comando = `
-    insert tb_favoritos  (id_produto, id_usuario) 
+    insert tb_favoritos (id_produto, id_usuario) 
     values              (?, ?);
     `
 
@@ -13,7 +13,7 @@ export async function inserirFavorito(favorito) {
 
 // Card Fav
 
-export async function consultaCardFavorito() {
+export async function consultaCardFavorito(id) {
     let comando = `
     select  P.id_produto as id,
             P.nome,
@@ -21,10 +21,11 @@ export async function consultaCardFavorito() {
             P.quantidade
       from  tb_favoritos F
       join  tb_produtos  P on F.id_produto = P.id_produto
-      join  tb_usuarios  U on F.id_usuario = U.id_usuario;
+      join  tb_usuarios  U on F.id_usuario = U.id_usuario
+      where U.id_usuario = ?;
     `
 
-    let resposta = await con.query(comando)
+    let resposta = await con.query(comando, [id])
     let registro = resposta[0]
     return registro
 }

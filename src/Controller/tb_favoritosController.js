@@ -1,11 +1,13 @@
 import * as bd from '../Repository/tb_favoritosRepository.js'
 
+import { autenticar } from "../utils/jwt.js"
 import { Router } from 'express'
 const endpoints = Router()
 
-endpoints.post('/tdl/favoritos/inserir/', async (req, resp) => {
+endpoints.post('/tdl/favoritos/inserir/', autenticar, async (req, resp) => {
     try {
         let favorito = req.body
+        favorito.idUsuario = req.user.id
         let id = await bd.inserirFavorito(favorito)
         resp.send({
             novoId: id
@@ -20,9 +22,11 @@ endpoints.post('/tdl/favoritos/inserir/', async (req, resp) => {
 
 // Card Fav
 
-endpoints.get('/tdl/favoritos/consulta/', async (req, resp) => {
+endpoints.get('/tdl/favoritos/consulta/:id', autenticar, async (req, resp) => {
     try {
-        let registros = await bd.consultaCardFavorito()
+        let id = req.params.id
+        let idUsuario = req.user.id
+        let registros = await bd.consultaCardFavorito(id, idUsuario)
         resp.send(registros)
     }
     catch (err) {
@@ -34,7 +38,7 @@ endpoints.get('/tdl/favoritos/consulta/', async (req, resp) => {
 
 // Delete Fav
 
-endpoints.delete('/tdl/favoritos/delete/:id', async (req, resp) => {
+endpoints.delete('/tdl/favoritos/delete/:id', autenticar, async (req, resp) => {
     try {
         let id = req.params.id
         let linhasAfetadas = await bd.deletarFavorito(id)

@@ -25,7 +25,7 @@ export async function consultaCardProduto(produto) {
 
     let resposta = await con.query(comando, [produto.sessao])
     let registro = resposta[0]
-    return registro[0]
+    return registro
 }
 
 // Exibição
@@ -74,7 +74,7 @@ export async function semEstoque() {
 
     let resposta = await con.query(comando)
     let registro = resposta[0]
-    return registro[0]
+    return registro
 }
 
 // Alter Produto
@@ -88,7 +88,7 @@ export async function alterarProduto(id, produto) {
             descricao   = ?,
             sessao      = ?,
             imagem      = ?
-     where 	id_produto          = ?;
+     where 	id_produto  = ?;
     `
 
     let resposta = await con.query(comando, [produto.nome, produto.valor, produto.quantidade, produto.descricao, produto.sessao, produto.imagem, id])

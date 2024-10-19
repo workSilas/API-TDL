@@ -1,27 +1,31 @@
 import con from "./connection.js";
 
-export async function consultaIdVenda(id) {
+export async function inserirVenda(venda) {
     let comando = `
-    select  id,
-            dt              data,
-            produto_id,
-            usuario_id
-      from  tb_venda
-      where id = ?;
+    insert tb_vendas (id_usuario, id_produto, quantidade, total, data, endereco, enviado)
+    values           (?, ?, ?, ?, ?, ?, false);
     `
 
-    let resposta = await con.query(comando, [id])
-    let registro = resposta[0]
-    return registro[0]
+    let resposta = await con.query(comando, [venda.idProduto, venda.idUsuario, venda.quantidade, venda.total, venda.data, venda.endereco])
+    let info = resposta[0]
+    return info.insertId
 }
+
+// Vendas
 
 export async function consultaVenda() {
     let comando = `
-    select  id,
-            dt              data,
-            produto_id,
-            usuario_id
-      from  tb_venda;
+    select  V.id_venda as id,
+            U.nome as usuario_nome,
+            P.nome as produto_nome,
+            V.quantidade,
+            V.data,
+            V.endereco,
+            V.enviado 
+      from  tb_vendas V
+      join  tb_usuarios U on V.id_usuario = U.id_usuario
+      join  tb_produtos P on V.id_produto = P.id_produto
+     where  V.enviado = true;
     `
 
     let resposta = await con.query(comando)
@@ -29,37 +33,90 @@ export async function consultaVenda() {
     return registro
 }
 
-export async function inserirVenda(venda) {
+// Vendas Total
+
+export async function consultaVendaTotal() {
     let comando = `
-    insert tb_venda 	(dt, produto_id, usuario_id) 
-    values              (?, ?, ?);
+        select  SUM(total) as Total
+                from  tb_vendas
+        where   enviado = true;
     `
 
-    let resposta = await con.query(comando, [venda.data, venda.produtoId, venda.usuarioId])
-    let info = resposta[0]
-    return info.insertId
+    let resposta = await con.query(comando)
+    let registro = resposta[0]
+    return registro
 }
 
-export async function alterarVenda(id, venda) {
+// Vendas Sessão
+
+export async function consultaVendaSessao(venda) {
     let comando = `
-    update 	tb_venda 
-       set 	dt 	            = ?,
-            produto_id 	    = ?,
-            usuario_id 		= ?
-     where 	id 		        = ?;
+        select  V.id_venda as id,
+                U.nome as usuario_nome,
+                P.nome as produto_nome,
+                V.quantidade,
+                V.total,			-- Vai ser uma variável com a a multiplicação do valor pela quantidade
+                V.data, 
+                V.endereco,
+                V.enviado 
+          from  tb_vendas V
+          join  tb_usuarios U on V.id_usuario = U.id_usuario
+          join  tb_produtos P on V.id_produto = P.id_produto
+         where  P.sessao  = ?
+           and  V.enviado = true;
     `
 
-    let resposta = await con.query(comando, [venda.data, venda.produtoId, venda.usuarioId, id])
-    let info = resposta[0]
-    return info.affectedRows
+    let resposta = await con.query(comando, [venda.sessao])
+    let registro = resposta[0]
+    return registro
 }
 
-export async function deletarVenda(id) {
+// Vendas Sessão Total
+
+export async function consultaVendaSessaoTotal(venda) {
     let comando = `
-    delete 
-      from  tb_venda	
-     where  id = ?;
+    select  SUM(V.total) as Total
+      from  tb_vendas V
+      join  tb_produtos P ON V.id_produto = P.id_produto 
+     where 	V.enviado = true
+       and 	P.sessao = ?;
     `
+
+    let resposta = await con.query(comando, [venda.sessao])
+    let registro = resposta[0]
+    return registro
+}
+
+// Todas as Vendas 
+
+export async function consultaTodasVendas() {
+    let comando = `
+    select  V.id_venda as id,
+            U.nome as usuario_nome,
+            P.nome as produto_nome,
+            V.quantidade,
+            V.data,
+            V.endereco,
+            V.enviado 
+      from  tb_vendas V
+      join  tb_usuarios U on V.id_usuario = U.id_usuario  
+      join  tb_produtos P on V.id_produto = P.id_produto;  
+    `
+
+    let resposta = await con.query(comando)
+    let registro = resposta[0]
+    return registro
+}
+
+// Finalizado
+
+export async function finalizarVenda(id) {
+    let comando = `
+    update tb_vendas
+       set enviado    = true
+     where id_venda   = ?;
+    `
+
     let resposta = await con.query(comando, [id])
     let info = resposta[0]
     return info.affectedRows

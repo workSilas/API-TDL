@@ -1,7 +1,6 @@
 import jwt from 'jsonwebtoken'
 const KEY = '===!!TrioDosLacos=='
 
-
 export function gerarToken(userInfo) {
   return jwt.sign(userInfo, KEY)
 }

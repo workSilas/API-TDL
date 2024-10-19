@@ -3,7 +3,6 @@ import express from 'express'
 import cors from 'cors'
 import criarRotas from './router.js'
 
-
 const servidor = express()
 
 servidor.use(express.json())

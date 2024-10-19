@@ -28,8 +28,8 @@ endpoints.get('/tdl/usuarios/consulta/', async (req, resp) => {
         let usuario = await bd.validarUsuario(pessoa)
 
         if (usuario === null) {
-            resp.send({erro: "Usuário ou senha incorreto(s)."})
-        } 
+            resp.send({ erro: "Usuário ou senha incorreto(s)." })
+        }
         else {
             let token = gerarToken(usuario)
             resp.send({

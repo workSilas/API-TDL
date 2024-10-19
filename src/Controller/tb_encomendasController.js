@@ -1,6 +1,5 @@
 import * as bd from '../Repository/tb_encomendasRepository.js'
 
-
 import { Router } from 'express'
 const endpoints = Router()
 

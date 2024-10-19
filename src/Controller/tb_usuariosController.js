@@ -1,5 +1,6 @@
 import * as bd from '../Repository/tb_usuariosRepository.js'
 
+import { gerarToken } from "../utils/jwt.js"
 import { Router } from 'express'
 const endpoints = Router()
 
@@ -23,9 +24,18 @@ endpoints.post('/tdl/usuarios/inserir/', async (req, resp) => {
 
 endpoints.get('/tdl/usuarios/consulta/', async (req, resp) => {
     try {
-        let usuario = req.body
-        let registros = await bd.validarUsuario(usuario)
-        resp.send(registros)
+        let pessoa = req.body
+        let usuario = await bd.validarUsuario(pessoa)
+
+        if (usuario === null) {
+            resp.send({erro: "Usuário ou senha incorreto(s)."})
+        } 
+        else {
+            let token = gerarToken(usuario)
+            resp.send({
+                "token": token
+            })
+        }
     }
     catch (err) {
         resp.status(400).send({

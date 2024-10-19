@@ -46,6 +46,21 @@ export async function exibicaoProduto(id) {
     return registro[0]
 }
 
+// Estoque
+
+export async function estoqueProduto() {
+    let comando = `
+    select  id_produto as id,
+            nome,
+            quantidade  
+     from   tb_produtos;
+    `
+
+    let resposta = await con.query(comando)
+    let registro = resposta[0]
+    return registro
+}
+
 // Sem Estoque
 
 export async function semEstoque() {
@@ -60,21 +75,6 @@ export async function semEstoque() {
     let resposta = await con.query(comando)
     let registro = resposta[0]
     return registro[0]
-}
-
-// Estoque
-
-export async function estoqueProduto() {
-    let comando = `
-    select  id_produto as id,
-            nome,
-            quantidade  
-     from   tb_produtos;
-    `
-
-    let resposta = await con.query(comando)
-    let registro = resposta[0]
-    return registro
 }
 
 // Alter Produto

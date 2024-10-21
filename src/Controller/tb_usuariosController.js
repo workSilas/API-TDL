@@ -33,6 +33,7 @@ endpoints.get('/tdl/usuarios/consulta/', async (req, resp) => {
         else {
             let token = gerarToken(usuario)
             resp.send({
+                "nome":pessoa.nome,
                 "token": token
             })
         }

@@ -8,10 +8,19 @@ const endpoints = Router()
 endpoints.post('/tdl/usuarios/inserir/', async (req, resp) => {
     try {
         let usuario = req.body
-        let id = await bd.inserirUsuario(usuario)
-        resp.send({
-            novoId: id
-        })
+        await bd.inserirUsuario(usuario)
+
+        let validar = await bd.validarUsuario(usuario)
+
+        if (validar === null) {
+            resp.send({ erro: "Usuário ou senha incorreto(s)." })
+        }
+        else {
+            let token = gerarToken(usuario)
+            resp.send({
+                "token": token
+            })
+        }
     }
     catch (err) {
         resp.status(400).send({
@@ -33,7 +42,6 @@ endpoints.get('/tdl/usuarios/consulta/', async (req, resp) => {
         else {
             let token = gerarToken(usuario)
             resp.send({
-                "nome":pessoa.nome,
                 "token": token
             })
         }

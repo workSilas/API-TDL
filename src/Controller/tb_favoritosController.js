@@ -1,4 +1,5 @@
 import * as bd from '../Repository/tb_favoritosRepository.js'
+import { validarFavoritos } from '../Validation/favoritosValidation.js'
 
 import { autenticar } from "../utils/jwt.js"
 import { Router } from 'express'
@@ -7,7 +8,9 @@ const endpoints = Router()
 endpoints.post('/tdl/favoritos/inserir/', autenticar, async (req, resp) => {
     try {
         let favorito = req.body
+        validarFavoritos(favorito)
         favorito.idUsuario = req.user.id
+
         let id = await bd.inserirFavorito(favorito)
         resp.send({
             novoId: id

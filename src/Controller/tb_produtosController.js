@@ -1,4 +1,5 @@
 import * as bd from '../Repository/tb_produtosRepository.js'
+import { validarProdutos } from '../Validation/produtosValidation.js'
 
 import { Router } from 'express'
 const endpoints = Router()
@@ -6,7 +7,10 @@ const endpoints = Router()
 endpoints.post('/tdl/produtos/inserir/', async (req, resp) => {
     try {
         let produto = req.body
+        validarProdutos(produto)
+
         let id = await bd.inserirProduto(produto)
+        
         resp.send({
             novoId: id
         })

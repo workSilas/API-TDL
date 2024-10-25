@@ -1,4 +1,5 @@
 import * as bd from '../Repository/tb_encomendasRepository.js'
+import { validarEncomendas } from '../Validation/encomendasValidation.js'
 
 import { Router } from 'express'
 const endpoints = Router()
@@ -6,7 +7,10 @@ const endpoints = Router()
 endpoints.post('/tdl/encomendas/inserir/', async (req, resp) => {
     try {
         let encomenda = req.body
+        validarEncomendas(encomenda)
+
         let id = await bd.inserirEncomenda(encomenda)
+        
         resp.send({
             novoId: id
         })

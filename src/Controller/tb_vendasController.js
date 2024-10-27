@@ -51,7 +51,7 @@ endpoints.get('/tdl/vendas/consultaTotal/', async (req, resp) => {
 
 // Vendas Sessão
 
-endpoints.get('/tdl/vendas/consultaSessao/', async (req, resp) => {
+endpoints.post('/tdl/vendas/consultaSessao/', async (req, resp) => {
     try {
         let venda = req.body
         let registros = await bd.consultaVendaSessao(venda)
@@ -66,7 +66,7 @@ endpoints.get('/tdl/vendas/consultaSessao/', async (req, resp) => {
 
 // Vendas Sessão Total
 
-endpoints.get('/tdl/vendas/consultaSessaoTotal/', async (req, resp) => {
+endpoints.post('/tdl/vendas/consultaSessaoTotal/', async (req, resp) => {
     try {
         let venda = req.body
         let registros = await bd.consultaVendaSessaoTotal(venda)

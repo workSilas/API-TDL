@@ -127,8 +127,7 @@ endpoints.put('/tdl/produtos/alterarEstoque/:id', async (req, resp) => {
 
 endpoints.delete('/tdl/produtos/deleteEstoque/', async (req, resp) => {
     try {
-        let produto = req.body
-        let linhasAfetadas = await bd.deletarSemEstoque(produto)
+        let linhasAfetadas = await bd.deletarSemEstoque()
         if (linhasAfetadas >= 1) {
             resp.send()
         } else {

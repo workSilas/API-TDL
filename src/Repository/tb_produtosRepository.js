@@ -112,12 +112,12 @@ export async function alterarEstoque(id, produto) {
 
 // Delete Produto sem Estoque
 
-export async function deletarSemEstoque(produto) {
+export async function deletarSemEstoque() {
     let comando = `
     delete from tb_produtos
-     where quantidade = ?;
+     where quantidade = 0;
     `
-    let resposta = await con.query(comando, [produto.quantidade])
+    let resposta = await con.query(comando)
     let info = resposta[0]
     return info.affectedRows
 }

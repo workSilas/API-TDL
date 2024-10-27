@@ -19,6 +19,7 @@ export async function consultaVenda() {
             U.nome as usuario_nome,
             P.nome as produto_nome,
             V.quantidade,
+            V.total,
             V.data,
             V.endereco,
             V.enviado 
@@ -27,6 +28,7 @@ export async function consultaVenda() {
       join  tb_produtos P on V.id_produto = P.id_produto
      where  V.enviado = true;
     `
+    // TRUE
 
     let resposta = await con.query(comando)
     let registro = resposta[0]

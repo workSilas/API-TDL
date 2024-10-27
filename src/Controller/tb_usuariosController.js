@@ -18,6 +18,7 @@ endpoints.post('/tdl/usuarios/entrar', async (req, resp) => {
         else {
             let token = gerarToken(usuario)
             resp.send({
+                "nome":pessoa.nome,
                 "token": token
             })
         }
@@ -28,6 +29,5 @@ endpoints.post('/tdl/usuarios/entrar', async (req, resp) => {
         })
     }
 })
-
 
 export default endpoints;

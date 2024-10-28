@@ -51,11 +51,12 @@ endpoints.get('/tdl/vendas/consultaTotal/', async (req, resp) => {
 
 // Vendas Sessão
 
-endpoints.post('/tdl/vendas/consultaSessao/', async (req, resp) => {
+endpoints.post('/tdl/vendas/consultaSessao/:sessao', async (req, resp) => {
     try {
-        let venda = req.body
-        let registros = await bd.consultaVendaSessao(venda)
+        let sessao = req.params.sessao
+        let registros = await bd.consultaVendaSessao(sessao)
         resp.send(registros)
+        
     }
     catch (err) {
         resp.status(400).send({
@@ -66,10 +67,10 @@ endpoints.post('/tdl/vendas/consultaSessao/', async (req, resp) => {
 
 // Vendas Sessão Total
 
-endpoints.post('/tdl/vendas/consultaSessaoTotal/', async (req, resp) => {
+endpoints.post('/tdl/vendas/consultaSessaoTotal/:sessao', async (req, resp) => {
     try {
-        let venda = req.body
-        let registros = await bd.consultaVendaSessaoTotal(venda)
+        let sessao = req.params.sessao
+        let registros = await bd.consultaVendaSessaoTotal(sessao)
         resp.send(registros)
     }
     catch (err) {

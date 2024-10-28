@@ -67,8 +67,8 @@ export async function consultaVendaSessao(venda) {
          where  P.sessao  = ?
            and  V.enviado = true;
     `
-
-    let resposta = await con.query(comando, [venda.sessao])
+        
+    let resposta = await con.query(comando, [venda])
     let registro = resposta[0]
     return registro
 }
@@ -84,7 +84,7 @@ export async function consultaVendaSessaoTotal(venda) {
        and 	P.sessao = ?;
     `
 
-    let resposta = await con.query(comando, [venda.sessao])
+    let resposta = await con.query(comando, [venda])
     let registro = resposta[0]
     return registro
 }
@@ -103,7 +103,7 @@ export async function consultaTodasVendas() {
       from  tb_vendas V
       join  tb_usuarios U on V.id_usuario = U.id_usuario  
       join  tb_produtos P on V.id_produto = P.id_produto
-     where  V.enviado = false;   
+     where  V.enviado = true;   
     `
 
     let resposta = await con.query(comando)

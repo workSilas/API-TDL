@@ -103,7 +103,7 @@ export async function consultaTodasVendas() {
       from  tb_vendas V
       join  tb_usuarios U on V.id_usuario = U.id_usuario  
       join  tb_produtos P on V.id_produto = P.id_produto
-     where  V.enviado = true;   
+     where  V.enviado = false;   
     `
 
     let resposta = await con.query(comando)

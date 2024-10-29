@@ -13,7 +13,7 @@ export async function inserirProduto(produto) {
 
 // Card Cat     
 
-export async function consultaCardProduto(produto) {
+export async function consultaCardProduto(sessao) {
     let comando = `
     select  id_produto as id,
             nome,
@@ -23,7 +23,7 @@ export async function consultaCardProduto(produto) {
      where  sessao = ?;
     `
 
-    let resposta = await con.query(comando, [produto.sessao])
+    let resposta = await con.query(comando, [sessao])
     let registro = resposta[0]
     return registro
 }

@@ -24,10 +24,10 @@ endpoints.post('/tdl/produtos/inserir/', async (req, resp) => {
 
 // Card Cat     
 
-endpoints.get('/tdl/produtos/consulta/', async (req, resp) => {
+endpoints.post('/tdl/produtos/consulta/:sessao', async (req, resp) => {
     try {
-        let produto = req.body
-        let registros = await bd.consultaCardProduto(produto)
+        let sessao = req.params.sessao
+        let registros = await bd.consultaCardProduto(sessao)
         resp.send(registros)
     }
     catch (err) {

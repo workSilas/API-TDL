@@ -39,7 +39,7 @@ endpoints.post('/tdl/produtos/consulta/:sessao', async (req, resp) => {
 
 // Exibição
 
-endpoints.get('/tdl/produtos/consulta/:id', async (req, resp) => {
+endpoints.post('/tdl/produtos/consultaId/:id', async (req, resp) => {
     try {
         let id = req.params.id
         let registros = await bd.exibicaoProduto(id)

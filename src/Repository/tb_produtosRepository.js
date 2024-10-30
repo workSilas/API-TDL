@@ -32,7 +32,8 @@ export async function consultaCardProduto(sessao) {
 
 export async function exibicaoProduto(id) {
     let comando = `
-    select  nome,
+    select  id_produto as id,
+            nome,
             valor,
             quantidade,
             descricao,
@@ -43,7 +44,7 @@ export async function exibicaoProduto(id) {
 
     let resposta = await con.query(comando, [id])
     let registro = resposta[0]
-    return registro[0]
+    return registro
 }
 
 // Estoque

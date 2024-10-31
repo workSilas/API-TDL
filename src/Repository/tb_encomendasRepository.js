@@ -6,7 +6,7 @@ export async function inserirEncomenda(encomendas) {
     values              (?, ?);
     `
 
-    let resposta = await con.query(comando, [encomendas.idUsuario, encomendas.descricao, encomendas.imagem])
+    let resposta = await con.query(comando, [encomendas.descricao, encomendas.imagem])
     let info = resposta[0]
     return info.insertId
 }

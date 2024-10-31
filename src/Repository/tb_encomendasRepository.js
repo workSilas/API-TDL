@@ -14,11 +14,8 @@ export async function inserirEncomenda(encomendas) {
 export async function consultaEncomenda() {
     let comando = `
     select   E.id_encomenda as id,
-             U.nome,
              E.descricao         
       from   tb_encomendas E
-      join   tb_usuarios  U
-        on   E.id_usuario = U.id_usuario
     order by E.id_encomenda desc;
     `
 

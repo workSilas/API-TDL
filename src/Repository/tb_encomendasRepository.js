@@ -2,11 +2,11 @@ import con from "./connection.js";
 
 export async function inserirEncomenda(encomendas) {
     let comando = `
-    insert tb_encomendas  (id_usuario, descricao, imagem) 
-    values              (?, ?, ?);
+    insert tb_encomendas  (descricao, imagem) 
+    values              (?, ?);
     `
 
-    let resposta = await con.query(comando, [encomendas.idUsuario, encomendas.descricao, encomendas.imagem])
+    let resposta = await con.query(comando, [encomendas.descricao, encomendas.imagem])
     let info = resposta[0]
     return info.insertId
 }

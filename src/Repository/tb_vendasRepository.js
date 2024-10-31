@@ -67,7 +67,7 @@ export async function consultaVendaSessao(venda) {
          where  P.sessao  = ?
            and  V.enviado = true;
     `
-        
+
     let resposta = await con.query(comando, [venda])
     let registro = resposta[0]
     return registro

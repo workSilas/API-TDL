@@ -8,7 +8,7 @@ endpoints.post('/tdl/vendas/inserir/', async (req, resp) => {
     try {
         let venda = req.body
         validarVendas(venda)
-        
+
         let id = await bd.inserirVenda(venda)
         resp.send({
             novoId: id
@@ -56,7 +56,7 @@ endpoints.post('/tdl/vendas/consultaSessao/:sessao', async (req, resp) => {
         let sessao = req.params.sessao
         let registros = await bd.consultaVendaSessao(sessao)
         resp.send(registros)
-        
+
     }
     catch (err) {
         resp.status(400).send({

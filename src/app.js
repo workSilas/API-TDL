@@ -5,7 +5,7 @@ import criarRotas from './router.js'
 
 const servidor = express()
 
-servidor.use(express.json({ limit:'10mb' }))
+servidor.use(express.json({ limit: '10mb' }))
 servidor.use(cors())
 
 criarRotas(servidor)

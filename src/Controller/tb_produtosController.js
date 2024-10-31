@@ -10,7 +10,7 @@ endpoints.post('/tdl/produtos/inserir/', async (req, resp) => {
         validarProdutos(produto)
 
         let id = await bd.inserirProduto(produto)
-        
+
         resp.send({
             novoId: id
         })

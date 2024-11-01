@@ -18,14 +18,20 @@ export async function consultaCardProduto(sessao) {
     select  id_produto as id,
             nome,
             valor,
-            quantidade
+            quantidade,
+            imagem
       from  tb_produtos
      where  sessao = ?;
     `
 
     let resposta = await con.query(comando, [sessao])
     let registro = resposta[0]
-    return registro
+    const temp = []
+    for (let item in registro) {
+        registro[item].imagem = registro[item]?.imagem?.toString()
+        temp.push(registro[item])
+    }
+    return temp
 }
 
 // Exibição
@@ -43,9 +49,14 @@ export async function exibicaoProduto(id) {
     `
 
     let resposta = await con.query(comando, [id])
-    let registro = resposta[0]
-    return registro
+    let registro = resposta[0][0]
+    if (registro.imagem != null) {
+        registro.imagem = registro.imagem.toString()
+    }
+    return [registro]
 }
+
+
 
 // Estoque
 

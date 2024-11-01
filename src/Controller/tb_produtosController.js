@@ -28,6 +28,8 @@ endpoints.post('/tdl/produtos/consulta/:sessao', async (req, resp) => {
     try {
         let sessao = req.params.sessao
         let registros = await bd.consultaCardProduto(sessao)
+        console.log(registros);
+
         resp.send(registros)
     }
     catch (err) {
@@ -43,6 +45,8 @@ endpoints.post('/tdl/produtos/consultaId/:id', async (req, resp) => {
     try {
         let id = req.params.id
         let registros = await bd.exibicaoProduto(id)
+        console.log(registros);
+
         resp.send(registros)
     }
     catch (err) {

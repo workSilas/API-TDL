@@ -6,7 +6,7 @@ export async function inserirVenda(venda) {
     values           (?, ?, ?, ?, ?, ?, false);
     `
 
-    let resposta = await con.query(comando, [venda.idProduto, venda.idUsuario, venda.quantidade, venda.total, venda.data, venda.endereco])
+    let resposta = await con.query(comando, [venda.idUsuario, venda.idProduto, venda.quantidade, venda.total, venda.data, venda.endereco])
     let info = resposta[0]
     return info.insertId
 }
@@ -110,6 +110,23 @@ export async function consultaTodasVendas() {
     let registro = resposta[0]
     return registro
 }
+
+
+
+
+export async function consultaVendaPorId(id) {
+    let comando = `
+    select  *
+      from  tb_vendas 
+     where  id_venda = ?
+    `
+
+    let resposta = await con.query(comando, [id])
+    let registro = resposta[0]
+    return registro[0]
+}
+
+
 
 // Finalizado
 

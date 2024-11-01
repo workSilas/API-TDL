@@ -110,14 +110,14 @@ export async function alterarProduto(id, produto) {
 
 // Alter Estoque
 
-export async function alterarEstoque(id, produto) {
+export async function alterarEstoque(id, qtd) {
     let comando = `
     update tb_produtos
-       set quantidade = ?
+       set quantidade = quantidade - ?
      where id_produto = ?;
     `
 
-    let resposta = await con.query(comando, [produto.quantidade, id])
+    let resposta = await con.query(comando, [qtd, id])
     let info = resposta[0]
     return info.affectedRows
 }

@@ -6,6 +6,24 @@ import { Router } from 'express'
 const endpoints = Router()
 
 
+endpoints.post('/tdl/usuarios/inserir', async (req, resp) => {
+    try {
+        let pessoa = req.body;
+
+        let id = await bd.inserirUsuario(pessoa);
+
+        resp.send({
+            novoId: id
+        })
+    }
+    catch (err) {
+        resp.status(400).send({
+            erro: err.message
+        })
+    }
+})
+
+
 endpoints.post('/tdl/usuarios/entrar', async (req, resp) => {
     try {
         let pessoa = req.body

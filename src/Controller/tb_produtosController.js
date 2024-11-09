@@ -28,8 +28,6 @@ endpoints.post('/tdl/produtos/consulta/:sessao', async (req, resp) => {
     try {
         let sessao = req.params.sessao
         let registros = await bd.consultaCardProduto(sessao)
-        console.log(registros);
-
         resp.send(registros)
     }
     catch (err) {

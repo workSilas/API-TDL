@@ -43,8 +43,6 @@ endpoints.post('/tdl/produtos/consultaId/:id', async (req, resp) => {
     try {
         let id = req.params.id
         let registros = await bd.exibicaoProduto(id)
-        console.log(registros);
-
         resp.send(registros)
     }
     catch (err) {

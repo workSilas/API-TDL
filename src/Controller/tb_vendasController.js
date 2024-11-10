@@ -8,7 +8,6 @@ const endpoints = Router()
 endpoints.post('/tdl/vendas/inserir/', async (req, resp) => {
     try {
         let venda = req.body
-        console.log(venda);
         validarVendas(venda)
 
         let id = await bd.inserirVenda(venda)

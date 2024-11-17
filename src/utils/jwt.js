@@ -1,28 +1,57 @@
-import jwt from 'jsonwebtoken'
-const KEY = '===!!TrioDosLacos=='
+import jwt from 'jsonwebtoken';
+const KEY = '===!!TrioDosLacos==';
 
-export function gerarToken(userInfo) {
-  return jwt.sign(userInfo, KEY)
+export function gerarTokenUser(usuario) {
+  const info = {
+    id: usuario[0].id,
+    nome: usuario[0].nome, 
+    email: usuario[0].email,
+    user_type: usuario[0].user_type
+  }
+
+  let token = jwt.sign(info, KEY)   
+  return token
 }
+
+
+export function gerarTokenAdm(usuario) {
+  const info = {
+    id: usuario.id,
+    nome: usuario.nome, 
+    email: usuario.email,
+    user_type: usuario.user_type
+  }
+
+  let token = jwt.sign(info, KEY)   
+  return token
+}
+
 
 export function autenticar(req, resp, next) {
   return autenticacao(req, resp, next);
 }
 
+
 export function autenticacao(req, resp, next) {
   try {
-    let token = req.headers['x-access-token'];
+    let token = req.headers['x-access-token']
 
-    if (token === undefined)
-      token = req.query['x-access-token']
+    if (!token) token = req.query['x-access-token']
+    if (!token) return resp.status(403).json({ erro: 'Token não fornecido' })
 
-    let signd = jwt.verify(token, KEY);
+    const decoded = jwt.verify(token, KEY)
+    req.user = decoded
 
-    req.user = signd;
-
-    next();
-
+    next()
   } catch (e) {
-    resp.status(401).end();
+    resp.status(401).json({ erro: 'Falha na autenticação' })
   }
+}
+
+
+export function autorizarAdmin(req, resp, next) {
+  if (req.user.user_type !== 'admin') {
+    return resp.status(403).json({ erro: 'Acesso negado' })
+  }
+  next()
 }

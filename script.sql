@@ -3,8 +3,10 @@ use 			trio_dos_lacos;
 
 create table tb_usuarios (
     id_usuario 	int primary key auto_increment not null,
-    nome 		varchar(100) unique not null,
-    senha 		varchar(250) not null 
+    nome 		varchar(100) not null,
+    email       varchar(200) unique not null,
+    senha 		varchar(250) not null,
+    user_type   enum('admin', 'user') default 'user'
 );
 
 create table tb_produtos (
@@ -40,3 +42,13 @@ create table tb_encomendas (
     imagem 		 longblob null
 );
 
+create table tb_favoritos(
+    id_usuario int,
+    id_produto int,
+    foreign key (id_usuario) references tb_usuarios(id_usuario)
+        on delete cascade 
+        on update cascade, 
+    foreign key (id_produto) references tb_produtos(id_produto)
+        on delete cascade 
+        on update cascade
+);

@@ -1,104 +1,206 @@
-import con from "./connection.js";
-import { criptografarSenha } from "../utils/criptografia.js";
+import * as bd from '../Repository/tb_usuariosRepository.js'
+import { validarLogin, validarUsuarios } from '../Validation/usuariosValidation.js'
+import { verificarSenha } from '../utils/criptografia.js'
+import { gerarTokenUser, gerarTokenAdm, autenticar, autorizarAdmin } from "../utils/jwt.js"
 
-// Usuários
-export async function validarUsuarioComum(usuario) {
-  let comando = `
-      select id_usuario as id,
-             nome, 
-             email,
-             user_type
-        from tb_usuarios
-       where email = ?
-         and senha = ?
-         and user_type = 'user'
-  `
-
-  let resposta = await con.query(comando, [usuario.email, usuario.senha])
-  return resposta[0]
-}
+import { Router } from 'express'
+const endpoints = Router()
 
 
-export async function inserirUsuario(usuario) {
-  let comando = `
-      insert into tb_usuarios (nome, email, senha)
-      values (?, ?, ?)
-  `
+// Usuário Comum
+endpoints.post('/tdl/usuarios/entrar', async (req, resp) => {
+    try {
+        let pessoa = req.body
+        validarLogin(pessoa)
 
-  let senhaCriptografada = await criptografarSenha(usuario.senha)
-  let resposta = await con.query(comando, [usuario.nome, usuario.email, senhaCriptografada])
-  return resposta[0].insertId;
-}
+        let senha = pessoa.senha
+        let hash = await bd.buscarEmailUsuario(pessoa.email)
+        let verificacao = await verificarSenha(senha, hash)
+
+        pessoa = {
+            "email": pessoa.email,
+            "senha": hash
+        }
+
+        let usuario = await bd.validarUsuarioComum(pessoa)
+
+        if (verificacao == true) {
+            let token = gerarTokenUser(usuario)
+            resp.send({
+                "token": token,
+            })
+        }
+        else {
+            resp.status(400).send({
+                erro: 'Senha incorreta'
+            })
+        }
+    } catch (err) {
+        resp.status(400).send({
+            erro: err.message
+        })
+    }
+})
 
 
-export async function buscarEmailUsuario(email) {
-  let comando = `
-      select senha
-        from tb_usuarios
-       where email = ?
-  `
-
-  let registro = await con.query(comando, [email])
-  return registro[0][0].senha;
-}
-
-
-export async function deletarUsuario(id) {
-  let comando = `
-      delete from tb_usuarios
-            where id_usuario = ?
-              and user_type = 'user';
-  `
-
-  let resposta = await con.query(comando, [id])
-  let linhasAfetadas = resposta[0]
-  return linhasAfetadas.affectedRows;
-}
+endpoints.post('/tdl/usuarios/inserir', async (req, resp) => {
+    try {
+        let usuario = req.body
+        validarUsuarios(usuario)
+        let id = await bd.inserirUsuario(usuario)
+        
+        resp.send({
+            novoId: id
+        })
+    }
+    catch (err) {
+        resp.status(400).send({
+            erro: err.message
+        })
+    }
+})
 
 
-export async function alterarUsuario(id, usuario) {
-  let comando = `
-      update tb_usuarios
-         set nome = ?,
-             email = ?,
-             senha = ?
-       where id_usuario = ?
-         and user_type = 'user'
-  `
-  let registro = await con.query(comando, [usuario.nome, usuario.email, usuario.senha, id])
-  return registro[0].affectedRows;
-}
+endpoints.delete('/tdl/usuarios/deletar', autenticar, async (req, resp) => {
+    try {
+        let idUsuario = req.user.id
+        let linhasAfetadas = await bd.deletarUsuario(idUsuario)
+        
+        if (linhasAfetadas > 0) {
+            resp.status(204).send()
+        }
+        else {
+            resp.status(404).send({
+                erro: "Nenhum registro encontrado"
+            })
+        }
+    }
+    catch (err) {
+        resp.status(400).send({
+            erro: err.message
+        })
+    }
+})
+
+
+endpoints.put('/tdl/usuarios/alterar', autenticar, async (req, resp) => {
+    try {
+        let id = req.user.id
+        let usuario = req.body
+        validarUsuarios(usuario)
+        
+        let linhasAfetadas = await bd.alterarUsuario(id, usuario)
+        
+        if (linhasAfetadas > 0) {
+            resp.status(204).send()
+        }
+        else {
+            resp.status(404).send({
+                erro: "Nenhum registro encontrado"
+            })
+        }
+    }
+    catch (err) {
+        resp.status(400).send({
+            erro: err.message
+        })
+    }
+})
+
+
+endpoints.get('/tdl/usuarios/consultar', autenticar, async (req, resp) => {
+    try {
+        let usuario = req.user
+
+        if (usuario == null || usuario == undefined) {
+            resp.status(404).send({
+                erro: 'Nenhum usuário encontrado'
+            })
+        } else {
+            resp.send(usuario)
+        }
+    } 
+    catch (err) {
+        resp.status(400).send({
+            erro: err.message
+        })    
+    }
+})
+
+
+endpoints.get('/tdl/usuarios/autenticar', autenticar, async (req, resp) => {
+    try {
+        let user = req.user
+
+        if (user.user_type !== 'user') {
+            resp.status(404).send({
+                erro: 'Usuário não encontrado'
+            })
+        } 
+        else {
+            resp.status(204).send()
+        }
+    } 
+    catch (err) {
+        resp.status(400).send({
+            erro: err.message
+        })    
+    }
+})
 
 
 // Admin
-export async function validarUsuarioAdm(usuario) {
-  let comando = `
-      select id_usuario as id,
-             nome, 
-             email,
-             user_type
-        from tb_usuarios
-       where email = ?
-         and senha = ?
-         and user_type = 'admin'
-  `
+endpoints.post('/tdl/adm/entrar', async (req, resp) => {
+    try {
+        let pessoa = req.body
+        validarLogin(pessoa)
 
-  let resposta = await con.query(comando, [usuario.email, usuario.senha])
-  let registro = resposta[0]
-  return registro[0];
-}
+        let usuario = await bd.validarUsuarioAdm(pessoa)
+
+        let token = gerarTokenAdm(usuario)
+        resp.send({
+            "nome": usuario.nome,
+            "token": token
+        })
+    } catch (err) {
+        resp.status(400).send({
+            erro: err.message
+        })
+    }
+})
 
 
-export async function consultarTodosOsUsuariosComuns() {
-  let comando = `
-      select id_usuario,
-             nome,
-             email,
-             senha
-        from tb_usuarios
-       where user_type = 'user'
-  `    
+endpoints.get('/tdl/adm/consulta', autenticar, autorizarAdmin, async (req, resp) => {
+    try {
+        let registros = await bd.consultarTodosOsUsuariosComuns()
+        resp.send(registros)
+    }
+    catch (err) {
+        resp.status(400).send({
+            erro: err.message
+        })
+    }
+})
 
-  let registros = await con.query(comando)
-  return registros[0];
-}
+
+endpoints.get('/tdl/usuarios/autenticar', autenticar, autorizarAdmin, async (req, resp) => {
+    try {
+        let user = req.user.user_type
+
+        if (user !== 'admin') {
+            resp.status(404).send({
+                erro: 'Usuário não encontrado'
+            })
+        } 
+        else {
+            resp.status(204).send()
+        }
+    } 
+    catch (err) {
+        resp.status(400).send({
+            erro: err.message
+        })    
+    }
+})
+
+export default endpoints;

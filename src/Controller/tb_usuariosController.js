@@ -61,7 +61,7 @@ endpoints.post('/tdl/usuarios/inserir', async (req, resp) => {
 })
 
 
-endpoints.delete('/tdl/usuarios/deletar', autenticar, async (req, resp) => {
+endpoints.delete('/tdl/usuarios/deletar', async (req, resp) => {
     try {
         let idUsuario = req.user.id
         let linhasAfetadas = await bd.deletarUsuario(idUsuario)
@@ -83,7 +83,7 @@ endpoints.delete('/tdl/usuarios/deletar', autenticar, async (req, resp) => {
 })
 
 
-endpoints.put('/tdl/usuarios/alterar', autenticar, async (req, resp) => {
+endpoints.put('/tdl/usuarios/alterar', async (req, resp) => {
     try {
         let id = req.user.id
         let usuario = req.body
@@ -104,6 +104,47 @@ endpoints.put('/tdl/usuarios/alterar', autenticar, async (req, resp) => {
         resp.status(400).send({
             erro: err.message
         })
+    }
+})
+
+
+endpoints.get('/tdl/usuarios/consultar', async (req, resp) => {
+    try {
+        let usuario = req.user
+
+        if (usuario == null || usuario == undefined) {
+            resp.status(404).send({
+                erro: 'Nenhum usuário encontrado'
+            })
+        } else {
+            resp.send(usuario)
+        }
+    } 
+    catch (err) {
+        resp.status(400).send({
+            erro: err.message
+        })    
+    }
+})
+
+
+endpoints.get('/tdl/usuarios/autenticar', autenticar, async (req, resp) => {
+    try {
+        let user = req.user
+
+        if (user.user_type !== 'user') {
+            resp.status(404).send({
+                erro: 'Usuário não encontrado'
+            })
+        } 
+        else {
+            resp.status(204).send()
+        }
+    } 
+    catch (err) {
+        resp.status(400).send({
+            erro: err.message
+        })    
     }
 })
 
@@ -129,7 +170,7 @@ endpoints.post('/tdl/adm/entrar', async (req, resp) => {
 })
 
 
-endpoints.get('/tdl/adm/consulta', autenticar, autorizarAdmin, async (req, resp) => {
+endpoints.get('/tdl/adm/consulta', async (req, resp) => {
     try {
         let registros = await bd.consultarTodosOsUsuariosComuns()
         resp.send(registros)
@@ -138,6 +179,27 @@ endpoints.get('/tdl/adm/consulta', autenticar, autorizarAdmin, async (req, resp)
         resp.status(400).send({
             erro: err.message
         })
+    }
+})
+
+
+endpoints.get('/tdl/adm/autenticar', autenticar, autorizarAdmin, async (req, resp) => {
+    try {
+        let user = req.user.user_type
+
+        if (user !== 'admin') {
+            resp.status(404).send({
+                erro: 'Usuário não encontrado'
+            })
+        } 
+        else {
+            resp.status(204).send()
+        }
+    } 
+    catch (err) {
+        resp.status(400).send({
+            erro: err.message
+        })    
     }
 })
 

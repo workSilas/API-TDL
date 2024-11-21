@@ -1,12 +1,11 @@
 import * as bd from '../Repository/tb_vendasRepository.js'
 import * as bdProduto from '../Repository/tb_produtosRepository.js'
-import { autenticar, autorizarAdmin } from '../utils/jwt.js'
 import { validarVendas } from '../Validation/vendasValidation.js'
 
 import { Router } from 'express'
 const endpoints = Router()
 
-endpoints.post('/tdl/vendas/inserir/', autenticar, autorizarAdmin, async (req, resp) => {
+endpoints.post('/tdl/vendas/inserir/', async (req, resp) => {
     try {
         let venda = req.body
         validarVendas(venda)
@@ -24,8 +23,7 @@ endpoints.post('/tdl/vendas/inserir/', autenticar, autorizarAdmin, async (req, r
 })
 
 // Vendas
-
-endpoints.get('/tdl/vendas/consulta/', autenticar, autorizarAdmin, async (req, resp) => {
+endpoints.get('/tdl/vendas/consulta/', async (req, resp) => {
     try {
         let registros = await bd.consultaVenda()
         resp.send(registros)
@@ -38,8 +36,7 @@ endpoints.get('/tdl/vendas/consulta/', autenticar, autorizarAdmin, async (req, r
 })
 
 // Vendas Total
-
-endpoints.get('/tdl/vendas/consultaTotal/', autenticar, autorizarAdmin, async (req, resp) => {
+endpoints.get('/tdl/vendas/consultaTotal/', async (req, resp) => {
     try {
         let registros = await bd.consultaVendaTotal()
         resp.send(registros)
@@ -52,8 +49,7 @@ endpoints.get('/tdl/vendas/consultaTotal/', autenticar, autorizarAdmin, async (r
 })
 
 // Vendas Sessão
-
-endpoints.post('/tdl/vendas/consultaSessao/:sessao', autenticar, autorizarAdmin, async (req, resp) => {
+endpoints.post('/tdl/vendas/consultaSessao/:sessao', async (req, resp) => {
     try {
         let sessao = req.params.sessao
         let registros = await bd.consultaVendaSessao(sessao)
@@ -68,8 +64,7 @@ endpoints.post('/tdl/vendas/consultaSessao/:sessao', autenticar, autorizarAdmin,
 })
 
 // Vendas Sessão Total
-
-endpoints.post('/tdl/vendas/consultaSessaoTotal/:sessao', autenticar, autorizarAdmin, async (req, resp) => {
+endpoints.post('/tdl/vendas/consultaSessaoTotal/:sessao', async (req, resp) => {
     try {
         let sessao = req.params.sessao
         let registros = await bd.consultaVendaSessaoTotal(sessao)
@@ -83,8 +78,7 @@ endpoints.post('/tdl/vendas/consultaSessaoTotal/:sessao', autenticar, autorizarA
 })
 
 // Todas as Vendas 
-
-endpoints.get('/tdl/vendas/consultaTodas/', autenticar, autorizarAdmin, async (req, resp) => {
+endpoints.get('/tdl/vendas/consultaTodas/', async (req, resp) => {
     try {
         let registros = await bd.consultaTodasVendas()
         resp.send(registros)
@@ -97,8 +91,7 @@ endpoints.get('/tdl/vendas/consultaTodas/', autenticar, autorizarAdmin, async (r
 })
 
 // Finalizado
-
-endpoints.put('/tdl/vendas/alterar/:id', autenticar, autorizarAdmin, async (req, resp) => {
+endpoints.put('/tdl/vendas/alterar/:id', async (req, resp) => {
     try {
         let id = req.params.id
 

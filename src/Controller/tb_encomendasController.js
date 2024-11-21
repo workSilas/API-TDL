@@ -4,7 +4,7 @@ import { validarEncomendas } from '../Validation/encomendasValidation.js'
 import { Router } from 'express'
 const endpoints = Router()
 
-endpoints.post('/tdl/encomendas/inserir/', async (req, resp) => {
+endpoints.post('/tdl/encomendas/inserir', async (req, resp) => {
     try {
         let encomenda = req.body
         validarEncomendas(encomenda)
@@ -22,7 +22,8 @@ endpoints.post('/tdl/encomendas/inserir/', async (req, resp) => {
     }
 })
 
-endpoints.get('/tdl/encomendas/consulta/', async (req, resp) => {
+
+endpoints.get('/tdl/encomendas/consulta', async (req, resp) => {
     try {
         let encomenda = req.body
         let registros = await bd.consultaEncomenda(encomenda)

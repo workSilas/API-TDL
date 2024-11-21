@@ -23,7 +23,6 @@ endpoints.post('/tdl/produtos/inserir/', async (req, resp) => {
 })
 
 // Card Cat     
-
 endpoints.post('/tdl/produtos/consulta/:sessao', async (req, resp) => {
     try {
         let sessao = req.params.sessao
@@ -38,7 +37,6 @@ endpoints.post('/tdl/produtos/consulta/:sessao', async (req, resp) => {
 })
 
 // Exibição
-
 endpoints.post('/tdl/produtos/consultaId/:id', async (req, resp) => {
     try {
         let id = req.params.id
@@ -53,7 +51,6 @@ endpoints.post('/tdl/produtos/consultaId/:id', async (req, resp) => {
 })
 
 // Estoque
-
 endpoints.get('/tdl/produtos/estoque/', async (req, resp) => {
     try {
         let registros = await bd.estoqueProduto()
@@ -67,8 +64,6 @@ endpoints.get('/tdl/produtos/estoque/', async (req, resp) => {
 })
 
 // Sem Estoque
-
-
 endpoints.get('/tdl/produtos/semEstoque/', async (req, resp) => {
     try {
         let produto = req.body
@@ -83,7 +78,6 @@ endpoints.get('/tdl/produtos/semEstoque/', async (req, resp) => {
 })
 
 // Alter Produto
-
 endpoints.put('/tdl/produtos/alterar/:id', async (req, resp) => {
     try {
         let id = req.params.id
@@ -103,8 +97,6 @@ endpoints.put('/tdl/produtos/alterar/:id', async (req, resp) => {
 })
 
 // Alter Estoque
-
-
 endpoints.put('/tdl/produtos/alterarEstoque/:id', async (req, resp) => {
     try {
         let id = req.params.id
@@ -124,7 +116,6 @@ endpoints.put('/tdl/produtos/alterarEstoque/:id', async (req, resp) => {
 })
 
 // Delete Produto sem Estoque
-
 endpoints.delete('/tdl/produtos/deleteEstoque/', async (req, resp) => {
     try {
         let linhasAfetadas = await bd.deletarSemEstoque()
@@ -142,7 +133,6 @@ endpoints.delete('/tdl/produtos/deleteEstoque/', async (req, resp) => {
 })
 
 // Delete Produto 
-
 endpoints.delete('/tdl/produtos/delete/:id', async (req, resp) => {
     try {
         let id = req.params.id

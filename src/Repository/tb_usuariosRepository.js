@@ -74,7 +74,7 @@ export async function alterarUsuario(id, usuario) {
 export async function inserirAdm(adm) {
   let comando = `
       insert into tb_usuarios (nome, email, senha, user_type)
-      values (?, ?, ?, admin)
+      values (?, ?, ?, "admin")
   `
 
   let senhaCriptografada = await criptografarSenha(adm.senha)

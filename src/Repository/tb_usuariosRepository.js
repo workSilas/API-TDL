@@ -21,8 +21,8 @@ export async function validarUsuarioComum(usuario) {
 
 export async function inserirUsuario(usuario) {
   let comando = `
-      insert into tb_usuarios (nome, email, senha)
-      values (?, ?, ?)
+      insert into tb_usuarios (nome, email, senha, user_type)
+      values (?, ?, ?, 'user')
   `
 
   let senhaCriptografada = await criptografarSenha(usuario.senha)

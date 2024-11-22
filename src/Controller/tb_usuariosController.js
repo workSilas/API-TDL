@@ -150,18 +150,51 @@ endpoints.get('/tdl/usuarios/autenticar', autenticar, async (req, resp) => {
 
 
 // Admin
+endpoints.post('/tdl/adm/inserir', async (req, resp) => {
+    try {
+        let usuario = req.body
+        validarUsuarios(usuario)
+        let id = await bd.inserirAdm(usuario)
+        
+        resp.send({
+            novoId: id
+        })
+    }
+    catch (err) {
+        resp.status(400).send({
+            erro: err.message
+        })
+    }
+})
+
+
 endpoints.post('/tdl/adm/entrar', async (req, resp) => {
     try {
         let pessoa = req.body
         validarLogin(pessoa)
 
+        let senha = pessoa.senha
+        let hash = await bd.buscarEmailUsuario(pessoa.email)
+        let verificacao = await verificarSenha(senha, hash)
+
+        pessoa = {
+            "email": pessoa.email,
+            "senha": hash
+        }
+
         let usuario = await bd.validarUsuarioAdm(pessoa)
 
-        let token = gerarTokenAdm(usuario)
-        resp.send({
-            "nome": usuario.nome,
-            "token": token
-        })
+        if (verificacao == true) {
+            let token = gerarTokenAdm(usuario)
+            resp.send({
+                "token": token,
+            })
+        }
+        else {
+            resp.status(400).send({
+                erro: 'Senha incorreta'
+            })
+        }
     } catch (err) {
         resp.status(400).send({
             erro: err.message
